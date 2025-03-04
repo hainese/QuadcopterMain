@@ -17,7 +17,7 @@ def send_data(payload, header):
 try:
     while True:
         payload = [0x00, 0x13, 0xFF, 0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  # Same payload as ESP32
-        header = 0b00000101  # Header
+        header = 0b00000111  # Header
         send_data(payload, header)
         time.sleep(2)  # Wait 2 seconds
 except KeyboardInterrupt:
