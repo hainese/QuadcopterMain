@@ -1,3 +1,0 @@
-This is a test file
-I want to make sure the git works
-Change
