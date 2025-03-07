@@ -7,12 +7,12 @@
 //#include <ctime>
 
 std::array<uint8_t, 32> packet;
-bool buttonA, buttonB, prevButtonA;
+bool buttonA, buttonB, prevButtonA, prevButtonB;
 bool globalHeartbeat, expectedHeartbeat;
 bool heartbeatEnable, buttonEnable, outputEnable;
 uint8_t outputCH0 = 0, outputCH1 = 0, outputCH2 = 0, outputCH3 = 0;
 
-int buttonAEnableTime, heartbeatTime;
+int buttonAEnableTime, buttonBEnableTime,heartbeatTime;
 
 void checkHeartBeat(bool heartbeat){
   if(millis() - heartbeatTime > 3000){
@@ -24,6 +24,32 @@ void checkHeartBeat(bool heartbeat){
       heartbeatTime = millis();
       heartbeatEnable = true;
   }
+}
+
+void checkButtonEnable(){
+  if(!prevButtonA && buttonA){
+    buttonAEnableTime = millis();
+  }
+  if(buttonA){
+    if(millis()-buttonAEnableTime > 3500){
+      Serial.println("Enabling Outputs");
+      buttonEnable = 1;
+    }
+  }
+  prevButtonA = buttonA;
+}
+
+void checkButtonDisable(){
+  if(!prevButtonB && buttonB){
+    buttonBEnableTime = millis();
+  }
+  if(buttonB){
+    if(millis()-buttonBEnableTime > 1000){
+      Serial.println("Disabling Outputs");
+      buttonEnable = 0;
+    }
+  }
+  prevButtonB = buttonB;
 }
 
 void setup() {
@@ -41,16 +67,7 @@ void loop() {
     buttonA = (packet[0] >> (0)) & 1;
     buttonB = (packet[0] >> (1)) & 1;
     globalHeartbeat = (packet[0] >> (2)) & 1;
-    if(!prevButtonA && buttonA){
-      buttonAEnableTime = millis();
-    }
-    if(buttonA){
-      if(millis()-buttonAEnableTime > 3500){
-        Serial.println("Enabling Outputs");
-        buttonEnable = 1;
-      }
-    }
-    prevButtonA = buttonA;
+    
     outputCH0 = packet[1];
     outputCH1 = packet[2];
     outputCH2 = packet[3];
@@ -59,6 +76,8 @@ void loop() {
   }
 
   //collectSensorData();
+  checkButtonEnable();
+  checkButtonDisable();
   checkHeartBeat(globalHeartbeat);
   if(!heartbeatEnable){
     buttonEnable = false;

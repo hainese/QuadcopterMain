@@ -32,10 +32,10 @@ void pwmInit(){
 }
 
 void outputPWM(bool outputEnable, uint8_t ch0, uint8_t ch1, uint8_t ch2, uint8_t ch3){
-  channel0Duty = ch0*255/100;
-  channel1Duty = ch1*255/100;
-  channel2Duty = ch2*255/100;
-  channel3Duty = ch3*255/100;
+  channel0Duty = ch0;//*255/100;
+  channel1Duty = ch1;//*255/100;
+  channel2Duty = ch2;//*255/100;
+  channel3Duty = ch3;//*255/100;
   
   if(outputEnable){
     ledcWrite(pwmChannel0, channel0Duty);
