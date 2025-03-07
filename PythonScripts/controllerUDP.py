@@ -73,7 +73,7 @@ try:
         print(f"Button 1 (A): {button_1}, Button 2 (B): {button_2}")
 
         # Modify the header based on button states
-        header = 0b00000000  # Base header
+        header = 0b10000000  # Base header
         if button_1:
             header |= 0b00000001  # Set bit 3 if Button 1 is pressed
         if button_2:

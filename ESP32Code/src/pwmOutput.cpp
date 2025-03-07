@@ -31,50 +31,22 @@ void pwmInit(){
   ledcAttachPin(pwmPin3, pwmChannel3);
 }
 
-void outputPWM(){
-  if(Serial.available() > 0){
-    int tempInt = 0;
-    String inputString = Serial.readString();
-    Serial.println(inputString);
-    int commaIndex = inputString.indexOf(',');
-    if(commaIndex != -1){
-      tempInt = inputString.substring(0, commaIndex).toInt();
-      if(tempInt >=0 & tempInt <= 100){
-        channel0Duty = tempInt*255/100;
-      }
-      inputString = inputString.substring(commaIndex +1);
-    }
-    commaIndex = inputString.indexOf(',');
-    if(commaIndex != -1){
-      tempInt = inputString.substring(0, commaIndex).toInt();
-      if(tempInt >=0 & tempInt <= 100){
-        channel1Duty = tempInt*255/100;
-      }
-      inputString = inputString.substring(commaIndex +1);
-    }
-    commaIndex = inputString.indexOf(',');
-    if(commaIndex != -1){
-      tempInt = inputString.substring(0, commaIndex).toInt();
-      if(tempInt >=0 & tempInt <= 100){
-        channel2Duty = tempInt*255/100;
-      }
-      inputString = inputString.substring(commaIndex +1);
-    }
-    tempInt = inputString.toInt();
-    if(tempInt >=0 & tempInt <= 100){
-      channel3Duty = tempInt*255/100;
-    }
-    Serial.print("CH1: ");
-    Serial.print(channel0Duty);
-    Serial.print("; CH2: ");
-    Serial.print(channel1Duty);
-    Serial.print("; CH3: ");
-    Serial.print(channel2Duty);
-    Serial.print("; CH4: ");
-    Serial.println(channel3Duty);
+void outputPWM(bool outputEnable, uint8_t ch0, uint8_t ch1, uint8_t ch2, uint8_t ch3){
+  channel0Duty = ch0*255/100;
+  channel1Duty = ch1*255/100;
+  channel2Duty = ch2*255/100;
+  channel3Duty = ch3*255/100;
+  
+  if(outputEnable){
+    ledcWrite(pwmChannel0, channel0Duty);
+    ledcWrite(pwmChannel1, channel1Duty);
+    ledcWrite(pwmChannel2, channel2Duty);
+    ledcWrite(pwmChannel3, channel3Duty);
   }
-  ledcWrite(pwmChannel0, channel0Duty);
-  ledcWrite(pwmChannel1, channel1Duty);
-  ledcWrite(pwmChannel2, channel2Duty);
-  ledcWrite(pwmChannel3, channel3Duty);
+  else{
+    ledcWrite(pwmChannel0, 0);
+    ledcWrite(pwmChannel1, 0);
+    ledcWrite(pwmChannel2, 0);
+    ledcWrite(pwmChannel3, 0);
+  }
 }

@@ -2,6 +2,6 @@
 #define WIRELESSCONNECTION_H
 
 void wifiSetup();
-void wifiReceive();
+std::array<uint8_t, 32> wifiReceive();
 
 #endif

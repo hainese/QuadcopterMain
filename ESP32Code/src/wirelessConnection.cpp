@@ -3,7 +3,7 @@
 #include "wirelessConnection.h"
 
 // Wi-Fi credentials
-const char* ssid = "ESP32Server";   // Set your custom SSID
+const char* ssid = "ESP32Drone";   // Set your custom SSID
 const char* password = "12345678"; // Set your custom password
 
 // UDP configuration
@@ -22,17 +22,14 @@ void wifiSetup(){
   Serial.println("UDP server started");
 }
 
-void wifiReceive(){
-  int packetSize = udp.parsePacket();
-  if (packetSize) {  
-    uint8_t packet[32];
-    int len = udp.read(packet, sizeof(packet));
-    Serial.print("Received Data: ");
-    for (int i = 0; i < len; i++) {
-      Serial.print(packet[i], HEX);
-      Serial.print(" ");
+std::array<uint8_t, 32> wifiReceive() {
+    std::array<uint8_t, 32> packet = {}; // Initialize with 0s
+    int packetSize = udp.parsePacket();
+    if (packetSize) {  
+        int len = udp.read(packet.data(), packet.size());
     }
-    Serial.println();
-  }
+    udp.flush();
+    return packet; // Safe copy (RVO or move semantics apply)
 }
+
 

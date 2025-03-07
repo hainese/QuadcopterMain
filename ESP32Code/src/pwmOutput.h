@@ -2,6 +2,6 @@
 #define PWMOUTPUT_H
 
 void pwmInit();
-void outputPWM();
+void outputPWM(bool outputEnable, uint8_t ch0, uint8_t ch1, uint8_t ch2, uint8_t ch3);
 
 #endif
