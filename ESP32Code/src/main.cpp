@@ -15,7 +15,7 @@ uint8_t outputCH0 = 0, outputCH1 = 0, outputCH2 = 0, outputCH3 = 0;
 int buttonAEnableTime, buttonBEnableTime,heartbeatTime;
 
 void checkHeartBeat(bool heartbeat){
-  if(millis() - heartbeatTime > 3000){
+  if(millis() - heartbeatTime > 3100){
     Serial.println("HEARTBEAT LOST");
     heartbeatEnable = false;
   }
@@ -84,4 +84,5 @@ void loop() {
   }
   outputEnable = heartbeatEnable & buttonEnable;
   outputPWM(outputEnable,outputCH0, outputCH1, outputCH2, outputCH3);
+
 }

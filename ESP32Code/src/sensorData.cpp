@@ -8,29 +8,43 @@ float prevAccelXB = 0, prevAccelYB = 0, prevAccelZB = 0;
 volatile bool motion_detectedB = false;
 const float motionThresholdB = 0.5;
 
-Adafruit_VL53L1X vl53; // Initialize VL53L1X with custom pins
+//Adafruit_VL53L1X vl53; // Initialize VL53L1X with custom pins
 Adafruit_LSM6DSOX sox; // Create an instance of the LSM6DSOX sensor
 
 void sensorSetup(){
     Wire.begin(8, 9); // Initialize I2C with custom pins
 
-  if (!vl53.begin(0x29, &Wire)) {
+  /*if (!vl53.begin(0x29, &Wire)) {
     Serial.println("Error initializing VL53L1X");
     while (1) delay(10);
   }
   vl53.setTimingBudget(15);
   vl53.startRanging();
+  */
+  bool temp = 0;
 
-  if (!sox.begin_I2C(0x6A)) {
-    Serial.println("Failed to find LSM6DSOX chip at address 0x6A");
-    while (1) delay(10);
+  while(!temp){
+    if (!sox.begin_I2C(0x6A)) {
+      Serial.println("Failed to find LSM6DSOX chip at address 0x6A");
+    }
+    else{
+      temp =1;
+    }
+    if (!sox.begin_I2C(0x6B)) {
+      Serial.println("Failed to find LSM6DSOX chip at address 0x6B");
+    }
+    else{
+      temp = 1;
+    }
+    delay(100);
   }
+
 
   sox.reset();
   delay(100);
-  sox.setAccelDataRate(LSM6DS_RATE_104_HZ);
+  //sox.setAccelDataRate(LSM6DS_RATE_104_HZ);
   sox.setGyroDataRate(LSM6DS_RATE_104_HZ);
-  sox.setAccelRange(LSM6DS_ACCEL_RANGE_4_G);
+  //sox.setAccelRange(LSM6DS_ACCEL_RANGE_4_G);
   sox.setGyroRange(LSM6DS_GYRO_RANGE_2000_DPS);
 }
 
@@ -58,17 +72,17 @@ void collectSensorData(){
     int16_t gyroZB = (int16_t)(gyro.gyro.z * 1000);
 
     int16_t distanceB = -1;
-    if (vl53.dataReady()) {
+    /*if (vl53.dataReady()) {
         distanceB = vl53.distance();
         vl53.clearInterrupt();
-    }
+    }*/
 
-    Serial.print(F("Accel (m/s^2): X="));
-    Serial.print(accel.acceleration.x);
-    Serial.print(F(", Y="));
-    Serial.print(accel.acceleration.y);
-    Serial.print(F(", Z="));
-    Serial.println(accel.acceleration.z);
+    //Serial.print(F("Accel (m/s^2): X="));
+    //Serial.print(accel.acceleration.x);
+   // Serial.print(F(", Y="));
+   // Serial.print(accel.acceleration.y);
+    //Serial.print(F(", Z="));
+   // Serial.println(accel.acceleration.z);
 
     Serial.print(F("Gyro (mrad/s): X="));
     Serial.print(gyroXB);
@@ -90,7 +104,7 @@ void collectSensorData(){
     Wire.write((uint8_t *)&gyroXB, sizeof(gyroXB));
     Wire.write((uint8_t *)&gyroYB, sizeof(gyroYB));
     Wire.write((uint8_t *)&gyroZB, sizeof(gyroZB));
-    Wire.write((uint8_t *)&distanceB, sizeof(distanceB));
+    //Wire.write((uint8_t *)&distanceB, sizeof(distanceB));
     Wire.write(motion_detectedB ? 1 : 0);
     Wire.endTransmission();
 
