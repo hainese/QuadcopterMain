@@ -27,8 +27,14 @@ std::array<uint8_t, 32> wifiReceive() {
     int packetSize = udp.parsePacket();
     if (packetSize) {  
         int len = udp.read(packet.data(), packet.size());
+        /*Serial.print("Received packet: ");
+        for (int i = 0; i < len; i++) {
+            Serial.printf("%02X ", packet[i]);
+        }
+        Serial.println();*/
     }
     udp.flush();
+
     return packet; // Safe copy (RVO or move semantics apply)
 }
 

@@ -71,7 +71,7 @@ void loop() {
     outputCH0 = packet[1];
     outputCH1 = packet[2];
     outputCH2 = packet[3];
-    outputCH3 = 0;
+    outputCH3 = packet[3];
     
   }
 

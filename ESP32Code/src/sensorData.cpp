@@ -29,12 +29,7 @@ void sensorSetup(){
     }
     else{
       temp =1;
-    }
-    if (!sox.begin_I2C(0x6B)) {
-      Serial.println("Failed to find LSM6DSOX chip at address 0x6B");
-    }
-    else{
-      temp = 1;
+      Serial.println("Gyro Good");
     }
     delay(100);
   }
