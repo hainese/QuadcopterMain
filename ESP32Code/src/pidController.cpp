@@ -67,7 +67,9 @@ void pidControl(float *prevRollError, float *prevRollI,
                 float throttleInput, 
                 float rollRate, 
                 float pitchRate, 
-                float yawRate) {
+                float yawRate,
+                int *dutyCycles
+            ) {
 
     // desired rates for roll, pitch, and yaw
     float desiredRollRate = desiredRate(rollInput);
@@ -85,11 +87,8 @@ void pidControl(float *prevRollError, float *prevRollI,
     float yawPID = calculatePIDinput(p, i, d, yawError, prevYawError, prevYawI);
 
     // calculate duty cycles for each motor
-    int dutyCycle1 = calculateDutyCycle1(throttleInput, rollPID, pitchPID, yawPID);
-    int dutyCycle2 = calculateDutyCycle2(throttleInput, rollPID, pitchPID, yawPID);
-    int dutyCycle3 = calculateDutyCycle3(throttleInput, rollPID, pitchPID, yawPID);
-    int dutyCycle4 = calculateDutyCycle4(throttleInput, rollPID, pitchPID, yawPID);
-
-    // output PWM signals to motors
-    outputPWM(true,dutyCycle1,dutyCycle2,dutyCycle3,dutyCycle4);
+    dutyCycles[1] = calculateDutyCycle1(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[2] = calculateDutyCycle2(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[3] = calculateDutyCycle3(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[4] = calculateDutyCycle4(throttleInput, rollPID, pitchPID, yawPID);
 }
