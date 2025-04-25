@@ -7,10 +7,11 @@
 // https://www.youtube.com/watch?v=jY6bBcMtseY
 
 float ts = 0.01;
+
 // PID controller values
-    float p = 0.1; // proportional gain
-    float i = 0.01; // integral gain
-    float d = 0.01; // derivative gain
+float p = 0.1; // proportional gain
+float i = 0.01; // integral gain
+float d = 0.01; // derivative gain
 
 // calculate desired rates for roll, pitch, and yaw
 float desiredRate(float inputValue){
