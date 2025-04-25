@@ -7,6 +7,16 @@
 
 //#include <ctime>
 
+// pid init variables
+float prevRollError = 0, prevRollI = 0;
+float prevPitchError = 0, prevPitchI = 0;
+float prevYawError = 0, prevYawI = 0;
+
+// Example sensor rates (replace with real IMU data)
+float rollRate = 0.0, pitchRate = 0.0, yawRate = 0.0;
+
+int dutyCycles[4];
+
 std::array<uint8_t, 32> packet;
 bool buttonA, buttonB, prevButtonA, prevButtonB;
 bool globalHeartbeat, expectedHeartbeat;
@@ -69,10 +79,10 @@ void loop() {
     buttonB = (packet[0] >> (1)) & 1;
     globalHeartbeat = (packet[0] >> (2)) & 1;
     
-    outputCH0 = packet[1];
-    outputCH1 = packet[2];
-    outputCH2 = packet[3];
-    outputCH3 = packet[3];
+    outputCH0 = packet[1]; // yaw
+    outputCH1 = packet[2]; // throttle
+    outputCH2 = packet[3]; // roll
+    outputCH3 = packet[4]; // pitch
     
   }
 
@@ -84,6 +94,21 @@ void loop() {
     buttonEnable = false;
   }
   outputEnable = heartbeatEnable & buttonEnable;
-  outputPWM(outputEnable,outputCH0, outputCH1, outputCH2, outputCH3);
+
+  pidControl(
+    &prevRollError, &prevRollI,
+    &prevPitchError, &prevPitchI,
+    &prevYawError, &prevYawI,
+    outputCH2, 
+    outputCH3, 
+    outputCH0, 
+    outputCH1, 
+    rollRate, 
+    pitchRate, 
+    yawRate,
+    dutyCycles
+  );
+  
+  outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
 
 }
