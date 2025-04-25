@@ -20,14 +20,15 @@ float errorValue(float desiredRate, float rate) {
     return output;
 }
 
-float inputRoll(float p, float i, float d, float currError, float &prevError, float &prevI){
+// calculate PID input for roll, pitch, and yaw
+float calculatePIDinput(float p, float i, float d, float currError, float &prevError, float &prevI){
     float output = p * currError + prevI + i * (currError + prevError) * ts / 2 + d * (currError - prevError) / ts; 
     prevError = currError;
     prevI = i;
     return output;
 }
 
-int motor1(float throttle, float roll, float pitch, float yaw){
+int calculateDutyCycle(float throttle, float roll, float pitch, float yaw){
     int output = throttle - pitch - roll - yaw;
     return output;
 }
