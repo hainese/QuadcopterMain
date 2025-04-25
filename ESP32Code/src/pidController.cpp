@@ -1,5 +1,7 @@
 
+#include <Arduino.h>
 #include "pwmOutput.h"
+#include "pidController.h"
 
 // PID controller code derived from the following video:
 // https://www.youtube.com/watch?v=jY6bBcMtseY

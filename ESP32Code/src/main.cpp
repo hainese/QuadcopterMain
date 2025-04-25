@@ -3,6 +3,7 @@
 #include "wirelessConnection.h"
 #include "pwmOutput.h"
 #include "sensorData.h"
+#include "pidController.h"
 
 //#include <ctime>
 
