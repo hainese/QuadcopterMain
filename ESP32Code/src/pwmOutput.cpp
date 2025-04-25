@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "pwmOutput.h"
+#include <stdint.h>
 
 const int pwmPin0 = 4;
 const int pwmPin1 = 5;
