@@ -56,32 +56,43 @@ try:
         clear_terminal()
         print(time.time() - sendTime)
         sendTime = time.time()
+        
         # Read joystick axes
         left_x = normalize_axis(joystick.get_axis(0))  # Left Stick X
         left_y = normalize_axis(joystick.get_axis(1))  # Left Stick Y
         right_x = normalize_axis(joystick.get_axis(2))  # Right Stick X
-        #right_y = normalize_axis(joystick.get_axis(3))  # Right Stick Y
-        right_y = 0
+        right_y = normalize_axis(joystick.get_axis(3))  # Right Stick Y
 
-        # Read button states (Button 1 = A, Button 2 = B)
-        button_1 = joystick.get_button(0)  # A button (index 0)
-        button_2 = joystick.get_button(1)  # B button (index 1)
+        # Read button states
+        button_A = joystick.get_button(0)
+        button_B = joystick.get_button(1)  
+        button_X = joystick.get_button(2)  
+        button_Y = joystick.get_button(3) 
+        button_LB = joystick.get_button(4)  
+        button_RB = joystick.get_button(5)
+        button_Back = joystick.get_button(6)
+        button_Start = joystick.get_button(7)
+        button_Xbox = joystick.get_button(8)
+        button_LeftStick = joystick.get_button(9)
+        button_RightStick = joystick.get_button(10)
+
+        #Get the heartbeat
+        if(time.time() - heartbeatTime > .25):
+            heartbeatTime = time.time()
+            heartbeat = not heartbeat
+
 
         # Print joystick and button values
         print(f"Left Stick: X={left_x}, Y={left_y}")
         print(f"Right Stick: X={right_x}, Y={right_y}")
-        print(f"Button 1 (A): {button_1}, Button 2 (B): {button_2}")
+        print(f"Button 1 (A): {button_A}, Button 2 (B): {button_B}")
 
         # Modify the header based on button states
         header = 0b10000000  # Base header
-        if button_1:
+        if button_A:
             header |= 0b00000001  # Set bit 3 if Button 1 is pressed
-        if button_2:
-            header |= 0b00000010  # Set bit 2 if Button 2 is pressed
-        if(time.time() - heartbeatTime > .25):
-            heartbeatTime = time.time()
-            heartbeat = not heartbeat
-        
+        if button_B:
+            header |= 0b00000010  # Set bit 2 if Button 2 is pressed    
         if heartbeat:
             header |= 0b00000100
 
