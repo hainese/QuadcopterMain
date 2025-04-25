@@ -50,12 +50,9 @@ int calculateDutyCycle4(float throttle, float roll, float pitch, float yaw){
     return output;
 }
 
-void pidControl(float *prevRollError, 
-                float *prevPitchError, 
-                float *prevYawError, 
-                float *prevRollI, 
-                float *prevPitchI, 
-                float *prevYawI, 
+void pidControl(float *prevRollError, float *prevRollI,
+                float *prevPitchError, float *prevPitchI,
+                float *prevYawError, float *prevYawI,
                 float rollInput, 
                 float pitchInput, 
                 float yawInput, 
@@ -82,7 +79,6 @@ void pidControl(float *prevRollError,
     float yawError = errorValue(desiredYawRate, yawRate);
 
     // calculate PID input for roll, pitch, and yaw
-
     float rollPID = calculatePIDinput(p, i, d, rollError, prevRollError, prevRollI);
     float pitchPID = calculatePIDinput(p, i, d, pitchError, prevPitchError, prevPitchI);
     float yawPID = calculatePIDinput(p, i, d, yawError, prevYawError, prevYawI);
