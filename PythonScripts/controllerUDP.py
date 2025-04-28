@@ -30,7 +30,7 @@ print(f"Controller detected: {joystick.get_name()}")
 
 # Function to normalize joystick values (-1 to 1) into 0-255
 def normalize_axis(value):
-    return int((value + 1) * 128)-1  # Convert -1 to 1 into 0 to 255
+    return int((value + 1) * 128)  # Convert -1 to 1 into 0 to 255
 
 # Function to send UDP packets
 def send_data(payload, header):
