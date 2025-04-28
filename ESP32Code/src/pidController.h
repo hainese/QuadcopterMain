@@ -18,6 +18,8 @@ void pidControl(float *prevRollError, float *prevRollI,
                 float throttleInput, 
                 float rollRate, 
                 float pitchRate, 
-                float yawRate);
+                float yawRate,
+                int *dutyCycles
+            );
 
 #endif

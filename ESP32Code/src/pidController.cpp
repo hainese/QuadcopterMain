@@ -87,8 +87,8 @@ void pidControl(float *prevRollError, float *prevRollI,
     float yawPID = calculatePIDinput(p, i, d, yawError, prevYawError, prevYawI);
 
     // calculate duty cycles for each motor
-    dutyCycles[1] = calculateDutyCycle1(throttleInput, rollPID, pitchPID, yawPID);
-    dutyCycles[2] = calculateDutyCycle2(throttleInput, rollPID, pitchPID, yawPID);
-    dutyCycles[3] = calculateDutyCycle3(throttleInput, rollPID, pitchPID, yawPID);
-    dutyCycles[4] = calculateDutyCycle4(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[0] = calculateDutyCycle1(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[1] = calculateDutyCycle2(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[2] = calculateDutyCycle3(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[3] = calculateDutyCycle4(throttleInput, rollPID, pitchPID, yawPID);
 }

@@ -12,7 +12,7 @@ float prevRollError = 0, prevRollI = 0;
 float prevPitchError = 0, prevPitchI = 0;
 float prevYawError = 0, prevYawI = 0;
 
-// Example sensor rates (replace with real IMU data)
+// Example sensor rates (replace with real gyro data)
 float rollRate = 0.0, pitchRate = 0.0, yawRate = 0.0;
 
 int dutyCycles[4];
@@ -108,7 +108,7 @@ void loop() {
     yawRate,
     dutyCycles
   );
-  
+
   outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
 
 }
