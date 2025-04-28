@@ -15,6 +15,7 @@ float prevYawError = 0, prevYawI = 0;
 // Example sensor rates (replace with real gyro data)
 float rollRate = 0.0, pitchRate = 0.0, yawRate = 0.0;
 
+float gyroData[3];
 float dutyCycles[4];
 
 std::array<uint8_t, 32> packet;
@@ -95,6 +96,10 @@ void loop() {
   }
   outputEnable = heartbeatEnable & buttonEnable;
 
+  rollRate = gyroData[0]; // X roll
+  pitchRate = gyroData[1]; // Y pitch
+  yawRate = gyroData[2]; // Z yaw
+  
   pidControl(
     &prevRollError, &prevRollI,
     &prevPitchError, &prevPitchI,
@@ -110,5 +115,4 @@ void loop() {
   );
 
   outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
-
 }
