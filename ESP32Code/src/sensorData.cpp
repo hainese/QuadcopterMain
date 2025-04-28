@@ -56,7 +56,7 @@ void detectMotionB(float accelX, float accelY, float accelZ) {
     prevAccelZB = accelZ;
   }
 
-void collectSensorData(){
+void collectSensorData(float *gyroData){
     sensors_event_t accel, gyro, temp;
     sox.getEvent(&accel, &gyro, &temp);
 
@@ -65,6 +65,10 @@ void collectSensorData(){
     int16_t gyroXB = (int16_t)(gyro.gyro.x * 1000);
     int16_t gyroYB = (int16_t)(gyro.gyro.y * 1000);
     int16_t gyroZB = (int16_t)(gyro.gyro.z * 1000);
+
+    gyroData[0] = gyroXB;
+    gyroData[1] = gyroYB;
+    gyroData[2] = gyroZB;
 
     int16_t distanceB = -1;
     /*if (vl53.dataReady()) {
