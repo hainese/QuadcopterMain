@@ -15,7 +15,7 @@ float prevYawError = 0, prevYawI = 0;
 // Example sensor rates (replace with real gyro data)
 float rollRate = 0.0, pitchRate = 0.0, yawRate = 0.0;
 
-int dutyCycles[4];
+float dutyCycles[4];
 
 std::array<uint8_t, 32> packet;
 bool buttonA, buttonB, prevButtonA, prevButtonB;

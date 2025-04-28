@@ -15,7 +15,9 @@ float d = 0.01; // derivative gain
 
 // calculate desired rates for roll, pitch, and yaw
 float desiredRate(float inputValue){
-    float output = 0.15 * (inputValue-1500);
+    //float output = 0.15 * (inputValue-1500);
+    //float output = inputValue - 127.5; // map input value from 0-255 to -127.5 to 127.5
+    float output = inputValue;
     return output;
 }
 
@@ -33,27 +35,37 @@ float calculatePIDinput(float p, float i, float d, float currError, float *prevE
     return output;
 }
 
+float saturateDutyCycle(float value){
+    if(value > 100){
+        return 100;
+    } else if(value < 0){
+        return 0;
+    } else {
+        return value;
+    }
+}
+
 // Duty Cycle for motor 1
-int calculateDutyCycle1(float throttle, float roll, float pitch, float yaw){
-    int output = throttle - pitch - roll - yaw;
+float calculateDutyCycle1(float throttle, float roll, float pitch, float yaw){
+    float output = saturateDutyCycle(throttle - pitch - roll - yaw);
     return output;
 }
 
 // Duty Cycle for motor 2
-int calculateDutyCycle2(float throttle, float roll, float pitch, float yaw){
-    int output = throttle + pitch - roll + yaw;
+float calculateDutyCycle2(float throttle, float roll, float pitch, float yaw){
+    float output = saturateDutyCycle(throttle + pitch - roll + yaw);
     return output;
 }
 
 // Duty Cycle for motor 3
-int calculateDutyCycle3(float throttle, float roll, float pitch, float yaw){
-    int output = throttle + pitch + roll - yaw;
+float calculateDutyCycle3(float throttle, float roll, float pitch, float yaw){
+    float output = saturateDutyCycle(throttle + pitch + roll - yaw);
     return output;
 }
 
 // Duty Cycle for motor 4
-int calculateDutyCycle4(float throttle, float roll, float pitch, float yaw){
-    int output = throttle - pitch + roll + yaw;
+float calculateDutyCycle4(float throttle, float roll, float pitch, float yaw){
+    float output = saturateDutyCycle(throttle - pitch + roll + yaw);
     return output;
 }
 
@@ -68,7 +80,7 @@ void pidControl(float *prevRollError, float *prevRollI,
                 float rollRate, 
                 float pitchRate, 
                 float yawRate,
-                int *dutyCycles
+                float *dutyCycles
             ) {
 
     // desired rates for roll, pitch, and yaw
