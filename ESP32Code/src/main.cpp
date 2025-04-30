@@ -90,7 +90,7 @@ void loop() {
     
   }
   
-  collectSensorData(gyroData);
+  collectSensorData(accelData, gyroData);
   checkButtonEnable();
   checkButtonDisable();
   checkHeartBeat(globalHeartbeat);
@@ -128,14 +128,14 @@ void loop() {
 
   // testing purposes only
   
-  Serial.println(
+  /*Serial.println(
     (String)"GyroX: "+ gyroData[0]+
     (String)" GyroY: "+ gyroData[1]+
     (String)" GyroZ: "+ gyroData[2]+
     (String)" m1: "+dutyCycles[0]+
     (String)" m2: "+dutyCycles[1]+
     (String)" m3: "+dutyCycles[2]+
-    (String)" m4: "+dutyCycles[3]);
+    (String)" m4: "+dutyCycles[3]);*/
                  
   // output duty cycles to motors
   outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
