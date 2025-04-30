@@ -51,23 +51,23 @@ float saturateDutyCycle(float value){
     }
 }
 
-// Duty Cycle for motor 1
-float calculateDutyCycle1(float throttle, float roll, float pitch, float yaw){
+// Duty Cycle for motor Front Left
+float calculateDutyCycleFL(float throttle, float roll, float pitch, float yaw){
     return throttle - pitch - roll - yaw;
 }
 
-// Duty Cycle for motor 2
-float calculateDutyCycle2(float throttle, float roll, float pitch, float yaw){
+// Duty Cycle for motor Front Right
+float calculateDutyCycleFR(float throttle, float roll, float pitch, float yaw){
     return throttle + pitch - roll + yaw;
 }
 
-// Duty Cycle for motor 3
-float calculateDutyCycle3(float throttle, float roll, float pitch, float yaw){
+// Duty Cycle for motor Rear Right
+float calculateDutyCycleRR(float throttle, float roll, float pitch, float yaw){
     return throttle + pitch + roll - yaw;
 }
 
-// Duty Cycle for motor 4
-float calculateDutyCycle4(float throttle, float roll, float pitch, float yaw){
+// Duty Cycle for motor RL
+float calculateDutyCycleRL(float throttle, float roll, float pitch, float yaw){
     return throttle - pitch + roll + yaw;
 }
 
@@ -101,8 +101,8 @@ void pidControl(float *prevRollError, float *prevRollI,
     float yawPID = calculatePIDinput(p, i, d, yawError, prevYawError, prevYawI);
 
     // calculate duty cycles for each motor
-    dutyCycles[0] = calculateDutyCycle1(throttleInput, rollPID, pitchPID, yawPID);
-    dutyCycles[1] = calculateDutyCycle2(throttleInput, rollPID, pitchPID, yawPID);
-    dutyCycles[2] = calculateDutyCycle3(throttleInput, rollPID, pitchPID, yawPID);
-    dutyCycles[3] = calculateDutyCycle4(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[0] = calculateDutyCycleRR(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[1] = calculateDutyCycleFR(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[2] = calculateDutyCycleRL(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[3] = calculateDutyCycleFL(throttleInput, rollPID, pitchPID, yawPID);
 }

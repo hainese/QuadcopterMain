@@ -24,7 +24,7 @@ std::array<uint8_t, 32> packet;
 bool buttonA, buttonB, prevButtonA, prevButtonB;
 bool globalHeartbeat, expectedHeartbeat;
 bool heartbeatEnable, buttonEnable, outputEnable;
-uint8_t outputCH0 = 0, outputCH1 = 0, outputCH2 = 0, outputCH3 = 0;
+uint8_t userThrottle = 0, userYaw = 0, userPitch = 0, userRoll = 0;
 
 int buttonAEnableTime, buttonBEnableTime,heartbeatTime;
 
@@ -82,10 +82,10 @@ void loop() {
     buttonB = (packet[0] >> (1)) & 1;
     globalHeartbeat = (packet[0] >> (2)) & 1;
     
-    outputCH0 = packet[1]; // yaw
-    outputCH1 = packet[2]; // throttle
-    outputCH2 = packet[3]; // roll
-    outputCH3 = packet[4]; // pitch
+    userYaw = packet[1]; // yaw
+    userThrottle = packet[2]; // throttle
+    userRoll = packet[3]; // roll
+    userPitch = packet[4]; // pitch
     
   }
   
@@ -105,25 +105,20 @@ void loop() {
   pitchRate = gyroData[1]; // Y pitch
   yawRate = gyroData[2]; // Z yaw
   
-  if(rollRate > maxGyro){
-    maxGyro = rollRate;
-  }
-  if(pitchRate > maxGyro){
-    maxGyro = pitchRate;
-  }
-  if(yawRate > maxGyro){
-    maxGyro = yawRate;
-  }
+  //for testing just hover
+  userRoll = 127;
+  userPitch = 127;
+  userYaw = 127;
 
   // calculate duty cycles
   pidControl(
     &prevRollError, &prevRollI,
     &prevPitchError, &prevPitchI,
     &prevYawError, &prevYawI,
-    outputCH2, 
-    outputCH3, 
-    outputCH0, 
-    outputCH1, 
+    userRoll, 
+    userPitch, 
+    userYaw, 
+    userThrottle, 
     rollRate, 
     pitchRate, 
     yawRate,
@@ -132,12 +127,15 @@ void loop() {
 
   // testing purposes only
   
-  Serial.println((String)"m1: "+dutyCycles[0]+
-                 (String)" m2: "+dutyCycles[1]+
-                 (String)" m3: "+dutyCycles[2]+
-                 (String)" m4: "+dutyCycles[3]+
-                 (String)" maxGyro: "+maxGyro); // maxGyro = 2431.00
-
+  Serial.println(
+    (String)"GyroX: "+ gyroData[0]+
+    (String)" GyroY: "+ gyroData[1]+
+    (String)" GyroZ: "+ gyroData[2]+
+    (String)" m1: "+dutyCycles[0]+
+    (String)" m2: "+dutyCycles[1]+
+    (String)" m3: "+dutyCycles[2]+
+    (String)" m4: "+dutyCycles[3]);
+                 
   // output duty cycles to motors
   outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
 }
