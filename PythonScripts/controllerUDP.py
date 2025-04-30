@@ -32,6 +32,9 @@ print(f"Controller detected: {joystick.get_name()}")
 def normalize_axis(value):
     return int((value + 1) * 128)  # Convert -1 to 1 into 0 to 255
 
+def flip_axis(value):
+    return int(255-value)
+
 # Function to send UDP packets
 def send_data(payload, header):
     packet = bytes([header]) + bytes(payload)  # Create packet with header + payload
@@ -60,8 +63,10 @@ try:
         # Read joystick axes
         left_x = normalize_axis(joystick.get_axis(0))  # Left Stick X
         left_y = normalize_axis(joystick.get_axis(1))  # Left Stick Y
+        left_y = flip_axis(left_y)
         right_x = normalize_axis(joystick.get_axis(2))  # Right Stick X
         right_y = normalize_axis(joystick.get_axis(3))  # Right Stick Y
+        right_y = flip_axis(right_y)
 
         # Read button states
         button_A = joystick.get_button(0)
