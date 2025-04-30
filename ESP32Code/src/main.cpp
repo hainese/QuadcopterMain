@@ -1,3 +1,4 @@
+
 #include <Arduino.h>
 #include <Wire.h>
 #include "wirelessConnection.h"
@@ -28,7 +29,7 @@ int buttonAEnableTime, buttonBEnableTime,heartbeatTime;
 
 void checkHeartBeat(bool heartbeat){
   if(millis() - heartbeatTime > 3100){
-    Serial.println("HEARTBEAT LOST");
+    //Serial.println("HEARTBEAT LOST");
     heartbeatEnable = false;
   }
   if(heartbeat == expectedHeartbeat){
@@ -44,7 +45,7 @@ void checkButtonEnable(){
   }
   if(buttonA){
     if(millis()-buttonAEnableTime > 3500){
-      Serial.println("Enabling Outputs");
+      //Serial.println("Enabling Outputs");
       buttonEnable = 1;
     }
   }
@@ -57,7 +58,7 @@ void checkButtonDisable(){
   }
   if(buttonB){
     if(millis()-buttonBEnableTime > 1000){
-      Serial.println("Disabling Outputs");
+      //Serial.println("Disabling Outputs");
       buttonEnable = 0;
     }
   }
@@ -88,6 +89,7 @@ void loop() {
   }
 
   //collectSensorData();
+  
   checkButtonEnable();
   checkButtonDisable();
   checkHeartBeat(globalHeartbeat);
@@ -95,11 +97,15 @@ void loop() {
     buttonEnable = false;
   }
   outputEnable = heartbeatEnable & buttonEnable;
+  
+
+  //outputEnable = 1; // For testing purposes, always enable output
 
   rollRate = gyroData[0]; // X roll
   pitchRate = gyroData[1]; // Y pitch
   yawRate = gyroData[2]; // Z yaw
   
+  // calculate duty cycles
   pidControl(
     &prevRollError, &prevRollI,
     &prevPitchError, &prevPitchI,
@@ -114,5 +120,14 @@ void loop() {
     dutyCycles
   );
 
+  // testing purposes only
+  /*
+  Serial.println((String)"m1: "+dutyCycles[0]+
+                 (String)"\nm2: "+dutyCycles[1]+
+                 (String)"\nm3: "+dutyCycles[2]+
+                 (String)"\nm4: "+dutyCycles[3]);
+  */
+
+  // output duty cycles to motors
   outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
 }
