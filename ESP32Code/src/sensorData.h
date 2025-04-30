@@ -3,6 +3,6 @@
 
 void sensorSetup();
 void detectMotionB(float accelX, float accelY, float accelZ);
-void collectSensorData();
+void collectSensorData(float *gyroData);
 
 #endif

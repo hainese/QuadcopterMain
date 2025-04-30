@@ -82,7 +82,7 @@ void collectSensorData(float *gyroData){
    // Serial.print(accel.acceleration.y);
     //Serial.print(F(", Z="));
    // Serial.println(accel.acceleration.z);
-
+/*
     Serial.print(F("Gyro (mrad/s): X="));
     Serial.print(gyroXB);
     Serial.print(F(", Y="));
@@ -98,7 +98,7 @@ void collectSensorData(float *gyroData){
 
     Serial.print(F("Motion Detected: "));
     Serial.println(motion_detectedB);
-
+*/
     Wire.beginTransmission(0x42);
     Wire.write((uint8_t *)&gyroXB, sizeof(gyroXB));
     Wire.write((uint8_t *)&gyroYB, sizeof(gyroYB));

@@ -70,7 +70,7 @@ void setup() {
   wifiSetup();
   pwmInit();
   heartbeatTime = millis();
-  //sensorSetup();
+  sensorSetup();
 }
 
 void loop() {
@@ -87,9 +87,8 @@ void loop() {
     outputCH3 = packet[4]; // pitch
     
   }
-
-  //collectSensorData();
   
+  collectSensorData(gyroData);
   checkButtonEnable();
   checkButtonDisable();
   checkHeartBeat(globalHeartbeat);
@@ -121,12 +120,11 @@ void loop() {
   );
 
   // testing purposes only
-  /*
+  
   Serial.println((String)"m1: "+dutyCycles[0]+
-                 (String)"\nm2: "+dutyCycles[1]+
-                 (String)"\nm3: "+dutyCycles[2]+
-                 (String)"\nm4: "+dutyCycles[3]);
-  */
+                 (String)" m2: "+dutyCycles[1]+
+                 (String)" m3: "+dutyCycles[2]+
+                 (String)" m4: "+dutyCycles[3]);
 
   // output duty cycles to motors
   outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
