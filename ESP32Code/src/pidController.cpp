@@ -53,22 +53,22 @@ float saturateDutyCycle(float value){
 
 // Duty Cycle for motor 1
 float calculateDutyCycle1(float throttle, float roll, float pitch, float yaw){
-    return saturateDutyCycle(throttle - pitch - roll - yaw);
+    return throttle - pitch - roll - yaw;
 }
 
 // Duty Cycle for motor 2
 float calculateDutyCycle2(float throttle, float roll, float pitch, float yaw){
-    return saturateDutyCycle(throttle + pitch - roll + yaw);
+    return throttle + pitch - roll + yaw;
 }
 
 // Duty Cycle for motor 3
 float calculateDutyCycle3(float throttle, float roll, float pitch, float yaw){
-    return saturateDutyCycle(throttle + pitch + roll - yaw);
+    return throttle + pitch + roll - yaw;
 }
 
 // Duty Cycle for motor 4
 float calculateDutyCycle4(float throttle, float roll, float pitch, float yaw){
-    return saturateDutyCycle(throttle - pitch + roll + yaw);
+    return throttle - pitch + roll + yaw;
 }
 
 // PID control block
