@@ -20,8 +20,8 @@ float d = 0.01; // derivative gain
 // may need to change
 float desiredRate(float inputValue){
     //float output = 0.15 * (inputValue-1500);
-    //float output = inputValue - 127.5; // map input value from 0-255 to -127.5 to 127.5
-    float output = inputValue;
+    float output = inputValue - 127.5; // map input value from 0-255 to -127.5 to 127.5
+    //float output = inputValue;
     return output;
 }
 

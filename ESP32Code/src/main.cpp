@@ -18,6 +18,7 @@ float rollRate = 0.0, pitchRate = 0.0, yawRate = 0.0;
 
 float gyroData[3];
 float dutyCycles[4];
+float maxGyro = 0;
 
 std::array<uint8_t, 32> packet;
 bool buttonA, buttonB, prevButtonA, prevButtonB;
@@ -104,6 +105,16 @@ void loop() {
   pitchRate = gyroData[1]; // Y pitch
   yawRate = gyroData[2]; // Z yaw
   
+  if(rollRate > maxGyro){
+    maxGyro = rollRate;
+  }
+  if(pitchRate > maxGyro){
+    maxGyro = pitchRate;
+  }
+  if(yawRate > maxGyro){
+    maxGyro = yawRate;
+  }
+
   // calculate duty cycles
   pidControl(
     &prevRollError, &prevRollI,
@@ -124,7 +135,8 @@ void loop() {
   Serial.println((String)"m1: "+dutyCycles[0]+
                  (String)" m2: "+dutyCycles[1]+
                  (String)" m3: "+dutyCycles[2]+
-                 (String)" m4: "+dutyCycles[3]);
+                 (String)" m4: "+dutyCycles[3]+
+                 (String)" maxGyro: "+maxGyro); // maxGyro = 2431.00
 
   // output duty cycles to motors
   outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
