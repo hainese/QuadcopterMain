@@ -4,7 +4,7 @@
 float desiredRate(float inputValue);
 float inputThrottle(float inputValue);
 float errorValue(float desiredRate, float rate);
-float calculatePIDinput(float p, float i, float d, float currError, float *prevError, float *prevI);
+float calculatePIDinput(float p, float i, float d, float currError, float *prevError, float *prevI, float ts);
 float saturateDutyCycle(float value);
 float calculateDutyCycle1(float throttle, float roll, float pitch, float yaw);
 float calculateDutyCycle2(float throttle, float roll, float pitch, float yaw);
