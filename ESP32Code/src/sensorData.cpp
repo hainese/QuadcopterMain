@@ -51,13 +51,13 @@ void collectSensorData(float *accelData, float *gyroData){
   rollAct = p * (rollAct + gyroX*timeDifference) + (1-p)*accelRoll;
   pitchAct = p * (pitchAct + gyroY*timeDifference) + (1-p)*accelPitch;
 
-  Serial.print("Accel R: " + (String)accelRoll + ", ");
-  Serial.print("Accel P: " + (String)accelPitch + ", ");
-  Serial.print("Gyro X: " + (String)gyro.gyro.x + ", ");
-  Serial.print("Gyro Y: " + (String)gyro.gyro.y + ", ");
-  Serial.print("RollA: " + (String)rollAct + ", ");
-  Serial.print("PitchA: " + (String)pitchAct + ", ");
-  Serial.println();
+  //Serial.print("Accel R: " + (String)accelRoll + ", ");
+  //Serial.print("Accel P: " + (String)accelPitch + ", ");
+  //Serial.print("Gyro X: " + (String)gyro.gyro.x + ", ");
+  //Serial.print("Gyro Y: " + (String)gyro.gyro.y + ", ");
+  //Serial.print("RollA: " + (String)rollAct + ", ");
+  //Serial.print("PitchA: " + (String)pitchAct + ", ");
+  //Serial.println();
 
   accelData[0] = accel.acceleration.x;
   accelData[1] = accel.acceleration.y;
