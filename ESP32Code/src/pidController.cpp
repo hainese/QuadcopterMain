@@ -9,7 +9,7 @@
 // time between each iteration
 // likely needs to be changed based on the rest of the system
 //float ts = 0.01;
-unsigned long timePrevious = 0;
+unsigned long timePrevious_pid = 0;
 
 // PID controller values
 // change these values to tune the PID controller based on the system
@@ -111,8 +111,8 @@ void pidControl(float *prevRollError, float *prevRollI,
             ) {
 
     unsigned long timeCurrent = millis();
-    float timeDifference = (timeCurrent - timePrevious) / 1000.0;
-    timePrevious = timeCurrent;
+    float timeDifference = (timeCurrent - timePrevious_pid) / 1000.0;
+    timePrevious_pid = timeCurrent;
 
     float desiredRollAngle = desiredAngle(rollInput);
     float desiredPitchAngle = desiredAngle(pitchInput);

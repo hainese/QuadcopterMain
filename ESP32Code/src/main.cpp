@@ -16,10 +16,12 @@ float prevYawError = 0, prevYawI = 0;
 // Example sensor rates (replace with real gyro data)
 float rollRate = 0.0, pitchRate = 0.0, yawRate = 0.0;
 float rollAngle = 0.0, pitchAngle = 0.0;
+float verticalVel;
 
 float accelData[3];
 float angleData[2];
 float gyroData[3];
+float velData[1];
 float dutyCycles[4];
 float maxGyro = 0;
 
@@ -95,14 +97,14 @@ void loop() {
     memcpy(&userPitch, &packetCombiner, sizeof(packetCombiner));
   }
 
-  Serial.print("User Roll: " + (String)userRoll);
+  /*Serial.print("User Roll: " + (String)userRoll);
   Serial.print(" User Pitch: " + (String)userPitch);
   Serial.print(" User Yaw: " + (String)userYaw);
   Serial.print(" User Throttle: " + (String)userThrottle);
-  Serial.println();
+  Serial.println();*/
 
   
-  collectSensorData(accelData, gyroData, angleData);
+  collectSensorData(accelData, gyroData, angleData, velData);
   checkButtonEnable();
   checkButtonDisable();
   checkHeartBeat(globalHeartbeat);
@@ -121,12 +123,10 @@ void loop() {
   pitchAngle = angleData[1]; // pitch angle
   rollRate = gyroData[0]; // X roll
   pitchRate = gyroData[1]; // Y pitch
-  yawRate = gyroData[2]; // Z yaw 
+  yawRate = gyroData[2]; // Z yaw
+  verticalVel = velData[0];
   
-  //for testing just hover
-  //userRoll = 127;
-  //userPitch = 127;
-  //userYaw = 127;
+
 
   // calculate duty cycles
   pidControl(
