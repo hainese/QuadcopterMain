@@ -2,15 +2,14 @@
 #define PIDCONTROLLER_H
 
 float desiredRate(float inputValue);
-float desiredYRate(float inputValue);
-float inputThrottle(float inputValue);
-float errorValue(float desiredRate, float rate);
-float calculatePIDinput(float p, float i, float d, float currError, float *prevError, float *prevI, float ts);
-float saturateDutyCycle(float value);
-float calculateDutyCycle1(float throttle, float roll, float pitch, float yaw);
-float calculateDutyCycle2(float throttle, float roll, float pitch, float yaw);
-float calculateDutyCycle3(float throttle, float roll, float pitch, float yaw);
-float calculateDutyCycle4(float throttle, float roll, float pitch, float yaw);
+float desiredAngle(float inputValue);
+float errorValueRate(float desiredRate, float rate);
+float errorValueAngle(float desiredAngle, float kalmanAngle);
+float pidEquation(float p, float i, float d, float currError, float *prevError, float *prevI, float ts);
+float calculateDutyCycleRR(float throttle, float roll, float pitch, float yaw);
+float calculateDutyCycleFR(float throttle, float roll, float pitch, float yaw);
+float calculateDutyCycleFL(float throttle, float roll, float pitch, float yaw);
+float calculateDutyCycleRL(float throttle, float roll, float pitch, float yaw);
 void pidControl(float *prevRollError, float *prevRollI,
                 float *prevPitchError, float *prevPitchI,
                 float *prevYawError, float *prevYawI,

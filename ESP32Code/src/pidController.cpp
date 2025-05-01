@@ -24,21 +24,15 @@ float dangle = 0;
 // calculate desired rates for roll, pitch, and yaw
 // may need to change
 
-float desiredYRate(float inputValue){
+float desiredRate(float inputValue){
     //float output = 0.15 * (inputValue-1500);
     float output = inputValue - 127.5; // map input value from 0-255 to -127.5 to 127.5
     //float output = inputValue;
     return output;
 }
-float desiredRate(float p, float i, float d, float currError, float *prevError, float *prevI, float ts){
-    float output = p * currError + *prevI + i * (currError + *prevError) * ts / 2 + d * (currError - *prevError) / ts;
-    *prevError = currError; // update previous error
-    *prevI = i; // update previous integral value
-    return output;
-}
 
 float desiredAngle(float inputValue){
-    float output = inputValue * 90; // -1 and 1 to -90 and 90
+    float output = ((inputValue - 127.5) / 127.5) * 90; // -1 and 1 to -90 and 90
     return output;
 }
 
@@ -51,8 +45,8 @@ float errorValueAngle(float desiredAngle, float kalmanAngle) {
     return desiredAngle - kalmanAngle;
 }
 
-// calculate PID input for roll, pitch, and yaw
-float calculatePIDinput(float p, float i, float d, float currError, float *prevError, float *prevI, float ts){
+// calculate PID for roll, pitch, and yaw
+float pidEquation(float p, float i, float d, float currError, float *prevError, float *prevI, float ts){
     // PID control equation:
     float output = p * currError + *prevI + i * (currError + *prevError) * ts / 2 + d * (currError - *prevError) / ts; 
     *prevError = currError; // update previous error
@@ -60,38 +54,24 @@ float calculatePIDinput(float p, float i, float d, float currError, float *prevE
     return output;
 }
 
-// limits output to 0-100% duty cycle
-// likely needs to be changed if the output is consistently above 100% or below 0%
-/*
-float saturateDutyCycle(float value){
-    if(value > 100){
-        return 100;
-    } else if(value < 0){
-        return 0;
-    } else {
-        return value;
-    }
-}
-*/
-
 // Duty Cycle for motor Front Left
 float calculateDutyCycleFL(float throttle, float roll, float pitch, float yaw){
-    return throttle - pitch - roll;// - yaw;
+    return throttle - pitch - roll - yaw;
 }
 
 // Duty Cycle for motor Front Right
 float calculateDutyCycleFR(float throttle, float roll, float pitch, float yaw){
-    return throttle + pitch - roll;// + yaw;
+    return throttle + pitch - roll + yaw;
 }
 
 // Duty Cycle for motor Rear Right
 float calculateDutyCycleRR(float throttle, float roll, float pitch, float yaw){
-    return throttle + pitch + roll;// - yaw;
+    return throttle + pitch + roll - yaw;
 }
 
 // Duty Cycle for motor RL
 float calculateDutyCycleRL(float throttle, float roll, float pitch, float yaw){
-    return throttle - pitch + roll;// + yaw;
+    return throttle - pitch + roll + yaw;
 }
 
 // PID control block
@@ -121,9 +101,9 @@ void pidControl(float *prevRollError, float *prevRollI,
     float pitchErrorAngle = errorValueAngle(desiredPitchAngle, pitchAngle);
 
     // desired rates for roll, pitch, and yaw
-    float desiredRollRate = desiredRate(pangle, iangle, dangle, rollErrorAngle, prevRollError, prevRollI, timeDifference);
-    float desiredPitchRate = desiredRate(pangle, iangle, dangle, pitchErrorAngle, prevPitchError, prevPitchI, timeDifference);
-    float desiredYawRate = desiredYRate(yawInput);
+    float desiredRollRate = pidEquation(pangle, iangle, dangle, rollErrorAngle, prevRollError, prevRollI, timeDifference);
+    float desiredPitchRate = pidEquation(pangle, iangle, dangle, pitchErrorAngle, prevPitchError, prevPitchI, timeDifference);
+    float desiredYawRate = desiredRate(yawInput);
 
     // calculate error values for roll, pitch, and yaw
     float rollError = errorValueRate(desiredRollRate, rollRate);
@@ -131,13 +111,13 @@ void pidControl(float *prevRollError, float *prevRollI,
     float yawError = errorValueRate(desiredYawRate, yawRate);
 
     // calculate PID input for roll, pitch, and yaw
-    float rollPID = calculatePIDinput(p, i, d, rollError, prevRollError, prevRollI, timeDifference);
-    float pitchPID = calculatePIDinput(p, i, d, pitchError, prevPitchError, prevPitchI, timeDifference);
-    float yawPID = calculatePIDinput(p, i, d, yawError, prevYawError, prevYawI, timeDifference);
+    float rollPID = pidEquation(p, i, d, rollError, prevRollError, prevRollI, timeDifference);
+    float pitchPID = pidEquation(p, i, d, pitchError, prevPitchError, prevPitchI, timeDifference);
+    float yawPID = pidEquation(p, i, d, yawError, prevYawError, prevYawI, timeDifference);
 
     // calculate duty cycles for each motor
-    dutyCycles[0] = calculateDutyCycleRR(throttleInput, rollPID, pitchPID, yawPID);
-    dutyCycles[1] = calculateDutyCycleFR(throttleInput, rollPID, pitchPID, yawPID);
-    dutyCycles[2] = calculateDutyCycleFL(throttleInput, rollPID, pitchPID, yawPID);
-    dutyCycles[3] = calculateDutyCycleRL(throttleInput, rollPID, pitchPID, yawPID);
+    dutyCycles[0] = constrain(calculateDutyCycleRR(throttleInput, rollPID, pitchPID, yawPID), 0, 255);
+    dutyCycles[1] = constrain(calculateDutyCycleFR(throttleInput, rollPID, pitchPID, yawPID), 0, 255);
+    dutyCycles[2] = constrain(calculateDutyCycleFL(throttleInput, rollPID, pitchPID, yawPID), 0, 255);
+    dutyCycles[3] = constrain(calculateDutyCycleRL(throttleInput, rollPID, pitchPID, yawPID), 0, 255);
 }
