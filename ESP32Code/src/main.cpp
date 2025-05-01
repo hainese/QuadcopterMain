@@ -27,7 +27,7 @@ std::array<uint8_t, 32> packet;
 bool buttonA, buttonB, prevButtonA, prevButtonB;
 bool globalHeartbeat, expectedHeartbeat;
 bool heartbeatEnable, buttonEnable, outputEnable;
-uint8_t userThrottle = 0, userYaw = 0, userPitch = 0, userRoll = 0;
+float userThrottle = 0, userYaw = 0, userPitch = 0, userRoll = 0;
 
 int buttonAEnableTime, buttonBEnableTime,heartbeatTime;
 
@@ -85,12 +85,22 @@ void loop() {
     buttonB = (packet[0] >> (1)) & 1;
     globalHeartbeat = (packet[0] >> (2)) & 1;
     
-    userYaw = packet[1]; // yaw
-    userThrottle = packet[2]; // throttle
-    userRoll = packet[3]; // roll
-    userPitch = packet[4]; // pitch
-    
+    uint32_t packetCombiner = ((packet[1]<<24) | (packet[2]<<16) | (packet[3]<<8) | packet [4]);
+    memcpy(&userYaw, &packetCombiner, sizeof(packetCombiner));
+    packetCombiner = ((packet[5]<<24) | (packet[6]<<16) | (packet[7]<<8) | packet [8]);
+    memcpy(&userThrottle, &packetCombiner, sizeof(packetCombiner));
+    packetCombiner = ((packet[9]<<24) | (packet[10]<<16) | (packet[11]<<8) | packet [12]);
+    memcpy(&userRoll, &packetCombiner, sizeof(packetCombiner));
+    packetCombiner = ((packet[13]<<24) | (packet[14]<<16) | (packet[15]<<8) | packet [16]);
+    memcpy(&userPitch, &packetCombiner, sizeof(packetCombiner));
   }
+
+  Serial.print("User Roll: " + (String)userRoll);
+  Serial.print(" User Pitch: " + (String)userPitch);
+  Serial.print(" User Yaw: " + (String)userYaw);
+  Serial.print(" User Throttle: " + (String)userThrottle);
+  Serial.println();
+
   
   collectSensorData(accelData, gyroData, angleData);
   checkButtonEnable();
@@ -114,9 +124,9 @@ void loop() {
   yawRate = gyroData[2]; // Z yaw 
   
   //for testing just hover
-  userRoll = 127;
-  userPitch = 127;
-  userYaw = 127;
+  //userRoll = 127;
+  //userPitch = 127;
+  //userYaw = 127;
 
   // calculate duty cycles
   pidControl(

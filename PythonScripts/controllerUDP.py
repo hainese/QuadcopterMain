@@ -2,6 +2,7 @@ import os
 import pygame
 import socket
 import time
+import struct
 
 # ESP32 AP credentials
 ESP_IP = "192.168.4.1"  # Default IP for ESP32 AP mode
@@ -28,12 +29,16 @@ joystick.init()
 
 print(f"Controller detected: {joystick.get_name()}")
 
-# Function to normalize joystick values (-1 to 1) into 0-255
-def normalize_axis(value):
-    return int((value + 1) * 128)  # Convert -1 to 1 into 0 to 255
 
 def flip_axis(value):
-    return int(255-value)
+    return -value
+
+def addDeadzone(value):
+    if(value>.1):
+        return (value-.1)*(10/9)
+    if(value<-.1):
+        return (value+.1)*(10/9)
+    return 0
 
 # Function to send UDP packets
 def send_data(payload, header):
@@ -61,12 +66,19 @@ try:
         sendTime = time.time()
         
         # Read joystick axes
-        left_x = normalize_axis(joystick.get_axis(0))  # Left Stick X
-        left_y = normalize_axis(joystick.get_axis(1))  # Left Stick Y
+        left_x = joystick.get_axis(0)  # Left Stick X
+        left_x = addDeadzone(left_x)
+
+        left_y = joystick.get_axis(1)  # Left Stick Y
         left_y = flip_axis(left_y)
-        right_x = normalize_axis(joystick.get_axis(2))  # Right Stick X
-        right_y = normalize_axis(joystick.get_axis(3))  # Right Stick Y
+        left_y = addDeadzone(left_y)
+
+        right_x = joystick.get_axis(2)  # Right Stick X
+        right_x = addDeadzone(right_x)
+
+        right_y = joystick.get_axis(3)  # Right Stick Y
         right_y = flip_axis(right_y)
+        right_y = addDeadzone(right_y)
 
         # Read button states
         button_A = joystick.get_button(0)
@@ -101,8 +113,10 @@ try:
         if heartbeat:
             header |= 0b00000100
 
-        # Create payload with joystick values at first 4 bytes
-        payload = [left_x, left_y, right_x, right_y] + [0] * 28  # 32-byte payload
+
+
+        # Create payload with joystick values at first 16 bytes
+        payload = struct.pack('>ffff',left_x, left_y, right_x, right_y)
 
         # Send the packet over UDP
         send_data(payload, header)
