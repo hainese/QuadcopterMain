@@ -2,6 +2,7 @@
 #define PIDCONTROLLER_H
 
 float desiredRate(float inputValue);
+float desiredYRate(float inputValue);
 float inputThrottle(float inputValue);
 float errorValue(float desiredRate, float rate);
 float calculatePIDinput(float p, float i, float d, float currError, float *prevError, float *prevI, float ts);
@@ -20,6 +21,8 @@ void pidControl(float *prevRollError, float *prevRollI,
                 float rollRate, 
                 float pitchRate, 
                 float yawRate,
+                float rollAngle,
+                float pitchAngle,
                 float *dutyCycles
             );
 

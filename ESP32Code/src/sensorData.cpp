@@ -34,7 +34,7 @@ void sensorSetup(){
   sox.setGyroRange(LSM6DS_GYRO_RANGE_2000_DPS);
 }
 
-void collectSensorData(float *accelData, float *gyroData){
+void collectSensorData(float *accelData, float *gyroData, float *angleData){
   sensors_event_t accel, gyro, temp;
   sox.getEvent(&accel, &gyro, &temp);
 
@@ -62,7 +62,9 @@ void collectSensorData(float *accelData, float *gyroData){
   accelData[0] = accel.acceleration.x;
   accelData[1] = accel.acceleration.y;
   accelData[2] = accel.acceleration.z;
-  gyroData[0] = rollAct;
-  gyroData[1] = pitchAct;
+  angleData[0] = rollAct;
+  angleData[1] = pitchAct;
+  gyroData[0] = gyro.gyro.x;
+  gyroData[1] = gyro.gyro.y;
   gyroData[2] = gyro.gyro.z;
 }

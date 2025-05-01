@@ -2,6 +2,6 @@
 #define SENSORDATA_H
 
 void sensorSetup();
-void collectSensorData(float *accelData, float *gyroData);
+void collectSensorData(float *accelData, float *gyroData, float *angleData);
 
 #endif

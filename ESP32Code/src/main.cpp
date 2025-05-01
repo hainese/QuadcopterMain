@@ -15,8 +15,10 @@ float prevYawError = 0, prevYawI = 0;
 
 // Example sensor rates (replace with real gyro data)
 float rollRate = 0.0, pitchRate = 0.0, yawRate = 0.0;
+float rollAngle = 0.0, pitchAngle = 0.0;
 
 float accelData[3];
+float angleData[2];
 float gyroData[3];
 float dutyCycles[4];
 float maxGyro = 0;
@@ -90,7 +92,7 @@ void loop() {
     
   }
   
-  collectSensorData(accelData, gyroData);
+  collectSensorData(accelData, gyroData, angleData);
   checkButtonEnable();
   checkButtonDisable();
   checkHeartBeat(globalHeartbeat);
@@ -102,9 +104,14 @@ void loop() {
 
   //outputEnable = 1; // For testing purposes, always enable output
 
+  //accelData[0] = accel.acceleration.x;
+  //accelData[1] = accel.acceleration.y;
+  //accelData[2] = accel.acceleration.z;
+  rollAngle = angleData[0]; // roll angle
+  pitchAngle = angleData[1]; // pitch angle
   rollRate = gyroData[0]; // X roll
   pitchRate = gyroData[1]; // Y pitch
-  yawRate = gyroData[2]; // Z yaw
+  yawRate = gyroData[2]; // Z yaw 
   
   //for testing just hover
   userRoll = 127;
@@ -123,6 +130,8 @@ void loop() {
     rollRate, 
     pitchRate, 
     yawRate,
+    rollAngle,
+    pitchAngle,
     dutyCycles
   );
 
