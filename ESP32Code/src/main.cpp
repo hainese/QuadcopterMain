@@ -12,6 +12,7 @@
 float prevRollError = 0, prevRollI = 0;
 float prevPitchError = 0, prevPitchI = 0;
 float prevYawError = 0, prevYawI = 0;
+float prevVerticalVelocityError = 0, prevVerticalVelocityI = 0;
 
 // Example sensor rates (replace with real gyro data)
 float rollRate = 0.0, pitchRate = 0.0, yawRate = 0.0;
@@ -133,6 +134,7 @@ void loop() {
     &prevRollError, &prevRollI,
     &prevPitchError, &prevPitchI,
     &prevYawError, &prevYawI,
+    &prevVerticalVelocityError, &prevVerticalVelocityI,
     userRoll, 
     userPitch, 
     userYaw, 
@@ -142,6 +144,7 @@ void loop() {
     yawRate,
     rollAngle,
     pitchAngle,
+    verticalVel,
     dutyCycles
   );
 
