@@ -150,14 +150,16 @@ void loop() {
 
   // testing purposes only
   
-  /*Serial.println(
-    (String)"GyroX: "+ gyroData[0]+
-    (String)" GyroY: "+ gyroData[1]+
-    (String)" GyroZ: "+ gyroData[2]+
-    (String)" m1: "+dutyCycles[0]+
-    (String)" m2: "+dutyCycles[1]+
-    (String)" m3: "+dutyCycles[2]+
-    (String)" m4: "+dutyCycles[3]);*/
+  Serial.println(
+    (String)"verticalVel: "+verticalVel+
+    (String)"\tuserThrottle: "+userThrottle+
+    (String)"\troll: "+userRoll+
+    (String)"\tpitch "+userPitch+
+    (String)"\tyaw: "+userYaw+
+    (String)"\tm1: "+dutyCycles[0]+
+    (String)"\tm2: "+dutyCycles[1]+
+    (String)"\tm3: "+dutyCycles[2]+
+    (String)"\tm4: "+dutyCycles[3]);
                  
   // output duty cycles to motors
   outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
