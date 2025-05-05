@@ -13,9 +13,15 @@ unsigned long timePreviousPid = 0;
 
 // PID controller values
 // change these values to tune the PID controller based on the system
+<<<<<<< HEAD
 float p = 0.3; // proportional gain
 float i = 0.01; // integral gain
 float d = 0.0; // derivative gain
+=======
+float p = 3; // proportional gain
+float i = 0.5; // integral gain
+float d = 0.2; // derivative gain
+>>>>>>> 8997d327259e86fdf3a79a98ffe448fe61c4ae1c
 
 float pangle = 1;
 float iangle = 0;
@@ -33,7 +39,7 @@ float desiredRate(float inputValue){
 // calculate desired angles for roll, pitch, and yaw from -90 to 90 degrees
 float desiredAngle(float inputValue){
     //float output = ((inputValue - 127.5) / 127.5) * 90; // -1 and 1 to -90 and 90
-    float output = (inputValue * 90);
+    float output = (inputValue * 45);
     return output;
 }
 
@@ -52,7 +58,7 @@ float pidEquation(float p, float i, float d, float currError, float *prevError, 
     // PID control equation:
     float output = p * currError + *prevI + i * (currError + *prevError) * ts / 2 + d * (currError - *prevError) / ts; 
     *prevError = currError; // update previous error
-    *prevI = i; // update previous integral value
+    *prevI = i * (currError + *prevError) * ts / 2; // update previous integral value
     return output;
 }
 
@@ -119,24 +125,32 @@ void pidControl(float *prevRollError, float *prevRollI,
     float rollErrorAngle = errorValueAngle(desiredRollAngle, rollAngle);
     float pitchErrorAngle = errorValueAngle(desiredPitchAngle, pitchAngle);
 
+    Serial.print("Roll Error A: " + (String)rollErrorAngle);
+    Serial.print("Pitch Error A: " + (String)pitchErrorAngle);
+    Serial.println();
+
     // desired rates for roll, pitch, and yaw
-    float desiredRollRate = pidEquation(pangle, iangle, dangle, rollErrorAngle, prevRollError, prevRollI, timeDifference);
-    float desiredPitchRate = pidEquation(pangle, iangle, dangle, pitchErrorAngle, prevPitchError, prevPitchI, timeDifference);
+    //float desiredRollRate = pidEquation(pangle, iangle, dangle, rollErrorAngle, prevRollError, prevRollI, timeDifference);
+    //float desiredPitchRate = pidEquation(pangle, iangle, dangle, pitchErrorAngle, prevPitchError, prevPitchI, timeDifference);
     float desiredYawRate = desiredRate(yawInput);
 
     // calculate error values for roll, pitch, and yaw
-    float rollError = errorValueRate(desiredRollRate, rollRate);
-    float pitchError = errorValueRate(desiredPitchRate, pitchRate);
+    //float rollError = errorValueRate(desiredRollRate, rollRate);
+    //float pitchError = errorValueRate(desiredPitchRate, pitchRate);
     float yawError = errorValueRate(desiredYawRate, yawRate);
 
     float verticalVelocityError = 0 - currentVerticalVelocity;
 
     // calculate PID input for roll, pitch, and yaw
-    float rollPID = pidEquation(p, i, d, rollError, prevRollError, prevRollI, timeDifference);
-    float pitchPID = pidEquation(p, i, d, pitchError, prevPitchError, prevPitchI, timeDifference);
+    float rollPID = pidEquation(p, i, d, rollErrorAngle, prevRollError, prevRollI, timeDifference);
+    float pitchPID = pidEquation(p, i, d, pitchErrorAngle, prevPitchError, prevPitchI, timeDifference);
     float yawPID = pidEquation(p, i, d, yawError, prevYawError, prevYawI, timeDifference);
 
-    float throttlePID = pidEquation(p, i, d, verticalVelocityError, prevVerticalVelocityError, prevVerticalVelocityI, timeDifference);
+    //Serial.print("RollPID" + (String)rollPID);
+    //Serial.println();
+
+    //float throttlePID = pidEquation(p, i, d, verticalVelocityError, prevVerticalVelocityError, prevVerticalVelocityI, timeDifference);
+    float throttlePID = 0;
     float baseThrottle = throttleInput * 255 + throttlePID;
 
     // calculate duty cycles for each motor
@@ -146,7 +160,8 @@ void pidControl(float *prevRollError, float *prevRollI,
     dutyCycles[3] = calculateDutyCycleBL(baseThrottle, rollPID, pitchPID, yawPID);
 
     //find scaling factor
-    float scaleFactor = pidScale(dutyCycles[0],dutyCycles[1],dutyCycles[2],dutyCycles[3]);
+    //float scaleFactor = pidScale(dutyCycles[0],dutyCycles[1],dutyCycles[2],dutyCycles[3]);
+    float scaleFactor = 1;
 
     //duty cycles  = scale * their duty
     dutyCycles[0] = constrain(scaleFactor * dutyCycles[0], 0, 255);

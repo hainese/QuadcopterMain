@@ -24,6 +24,7 @@ float angleData[2];
 float gyroData[3];
 float velData[1];
 float dutyCycles[4];
+uint8_t dutyCycle8bit[4];
 float maxGyro = 0;
 
 std::array<uint8_t, 32> packet;
@@ -52,7 +53,7 @@ void checkButtonEnable(){
   }
   if(buttonA){
     if(millis()-buttonAEnableTime > 3500){
-      //Serial.println("Enabling Outputs");
+      Serial.println("Enabling Outputs");
       buttonEnable = 1;
     }
   }
@@ -73,7 +74,7 @@ void checkButtonDisable(){
 }
 
 void setup() {
-  //Serial.begin(115200);
+  Serial.begin(115200);
   wifiSetup();
   pwmInit();
   heartbeatTime = millis();
@@ -148,20 +149,25 @@ void loop() {
     dutyCycles
   );
 
+  dutyCycle8bit[0] = (uint8_t)dutyCycles[0];
+  dutyCycle8bit[1] = (uint8_t)dutyCycles[1];
+  dutyCycle8bit[2] = (uint8_t)dutyCycles[2];
+  dutyCycle8bit[3] = (uint8_t)dutyCycles[3];
+
   // testing purposes only
-  /*
-  /Serial.println(
+  
+  /*Serial.println(
     (String)"verticalVel: "+verticalVel+
-    (String)"\tuserThrottle: "+userThrottle+
-    (String)"\troll: "+userRoll+
-    (String)"\tpitch "+userPitch+
-    (String)"\tyaw: "+userYaw+
-    (String)"\tm1: "+dutyCycles[0]+
-    (String)"\tm2: "+dutyCycles[1]+
-    (String)"\tm3: "+dutyCycles[2]+
-    (String)"\tm4: "+dutyCycles[3]);
-    */
+    (String)"userThrottle: "+userThrottle+
+    (String)"roll: "+userRoll+
+    (String)"pitch "+userPitch+
+    (String)"yaw: "+userYaw+
+    (String)"m1: "+dutyCycle8bit[0]+
+    (String)"m2: "+dutyCycle8bit[1]+
+    (String)"m3: "+dutyCycle8bit[2]+
+    (String)"m4: "+dutyCycle8bit[3]);*/
+    
                  
   // output duty cycles to motors
-  outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);
+  outputPWM(outputEnable, dutyCycle8bit[0], dutyCycle8bit[1], dutyCycle8bit[2], dutyCycle8bit[3]);
 }
