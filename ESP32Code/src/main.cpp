@@ -32,7 +32,7 @@ bool globalHeartbeat, expectedHeartbeat;
 bool heartbeatEnable, buttonEnable, outputEnable;
 float userThrottle = 0, userYaw = 0, userPitch = 0, userRoll = 0;
 
-int buttonAEnableTime, buttonBEnableTime,heartbeatTime;
+int buttonAEnableTime, buttonBEnableTime, heartbeatTime;
 
 void checkHeartBeat(bool heartbeat){
   if(millis() - heartbeatTime > 3100){
@@ -73,7 +73,7 @@ void checkButtonDisable(){
 }
 
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(115200);
   wifiSetup();
   pwmInit();
   heartbeatTime = millis();
@@ -149,8 +149,8 @@ void loop() {
   );
 
   // testing purposes only
-  
-  Serial.println(
+  /*
+  /Serial.println(
     (String)"verticalVel: "+verticalVel+
     (String)"\tuserThrottle: "+userThrottle+
     (String)"\troll: "+userRoll+
@@ -160,6 +160,7 @@ void loop() {
     (String)"\tm2: "+dutyCycles[1]+
     (String)"\tm3: "+dutyCycles[2]+
     (String)"\tm4: "+dutyCycles[3]);
+    */
                  
   // output duty cycles to motors
   outputPWM(outputEnable, dutyCycles[0], dutyCycles[1], dutyCycles[2], dutyCycles[3]);

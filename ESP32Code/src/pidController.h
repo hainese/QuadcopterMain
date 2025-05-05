@@ -6,6 +6,7 @@ float desiredAngle(float inputValue);
 float errorValueRate(float desiredRate, float rate);
 float errorValueAngle(float desiredAngle, float kalmanAngle);
 float pidEquation(float p, float i, float d, float currError, float *prevError, float *prevI, float ts);
+float pidScale(float duty0, float duty1, float duty2, float duty3);
 float calculateDutyCycleBR(float throttle, float roll, float pitch, float yaw);
 float calculateDutyCycleFR(float throttle, float roll, float pitch, float yaw);
 float calculateDutyCycleFL(float throttle, float roll, float pitch, float yaw);
