@@ -14,8 +14,8 @@ unsigned long timePrevious_pid = 0;
 // PID controller values
 // change these values to tune the PID controller based on the system
 float p = 0.1; // proportional gain
-float i = 0.01; // integral gain
-float d = 0.01; // derivative gain
+float i = 0.0; // integral gain
+float d = 0.0; // derivative gain
 
 float pangle = 2;
 float iangle = 0;
@@ -58,22 +58,22 @@ float pidEquation(float p, float i, float d, float currError, float *prevError, 
 
 // Duty Cycle for motor Front Left
 float calculateDutyCycleFL(float throttle, float roll, float pitch, float yaw){
-    return throttle - pitch - roll - yaw;
+    return throttle - pitch + roll - yaw;
 }
 
 // Duty Cycle for motor Front Right
 float calculateDutyCycleFR(float throttle, float roll, float pitch, float yaw){
-    return throttle + pitch - roll + yaw;
+    return throttle - pitch - roll + yaw;
 }
 
 // Duty Cycle for motor Rear Right
-float calculateDutyCycleRR(float throttle, float roll, float pitch, float yaw){
-    return throttle + pitch + roll - yaw;
+float calculateDutyCycleBR(float throttle, float roll, float pitch, float yaw){
+    return throttle + pitch - roll - yaw;
 }
 
 // Duty Cycle for motor RL
-float calculateDutyCycleRL(float throttle, float roll, float pitch, float yaw){
-    return throttle - pitch + roll + yaw;
+float calculateDutyCycleBL(float throttle, float roll, float pitch, float yaw){
+    return throttle + pitch + roll + yaw;
 }
 
 // PID control block
@@ -126,8 +126,8 @@ void pidControl(float *prevRollError, float *prevRollI,
     float throttlePID = pidEquation(p, i, d, verticalVelocityError, prevVerticalVelocityError, prevVerticalVelocityI, timeDifference);
 
     // calculate duty cycles for each motor
-    dutyCycles[0] = constrain(calculateDutyCycleRR(throttleInput*255, rollPID, pitchPID, yawPID), 0, 255);
+    dutyCycles[0] = constrain(calculateDutyCycleBR(throttleInput*255, rollPID, pitchPID, yawPID), 0, 255);
     dutyCycles[1] = constrain(calculateDutyCycleFR(throttleInput*255, rollPID, pitchPID, yawPID), 0, 255);
     dutyCycles[2] = constrain(calculateDutyCycleFL(throttleInput*255, rollPID, pitchPID, yawPID), 0, 255);
-    dutyCycles[3] = constrain(calculateDutyCycleRL(throttleInput*255, rollPID, pitchPID, yawPID), 0, 255);
+    dutyCycles[3] = constrain(calculateDutyCycleBL(throttleInput*255, rollPID, pitchPID, yawPID), 0, 255);
 }
