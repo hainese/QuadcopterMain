@@ -9,7 +9,7 @@
 // time between each iteration
 // likely needs to be changed based on the rest of the system
 //float ts = 0.01;
-unsigned long timePrevious_pid = 0;
+unsigned long timePreviousPid = 0;
 
 // PID controller values
 // change these values to tune the PID controller based on the system
@@ -76,6 +76,7 @@ float calculateDutyCycleBL(float throttle, float roll, float pitch, float yaw){
     return throttle + pitch + roll + yaw;
 }
 
+// Scaling PID Output
 float pidScale(float duty0, float duty1, float duty2, float duty3) {
     //find max duty
     float maxDuty = max(max(duty0,duty1),max(duty2,duty3));
@@ -107,8 +108,8 @@ void pidControl(float *prevRollError, float *prevRollI,
             ) {
 
     unsigned long timeCurrent = millis();
-    float timeDifference = (timeCurrent - timePrevious_pid) / 1000.0;
-    timePrevious_pid = timeCurrent;
+    float timeDifference = (timeCurrent - timePreviousPid) / 1000.0;
+    timePreviousPid = timeCurrent;
 
     // calculate the desired angles for roll and pitch
     float desiredRollAngle = desiredAngle(rollInput);
