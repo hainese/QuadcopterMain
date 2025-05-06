@@ -15,11 +15,11 @@ void wifiSetup(){
   WiFi.softAP(ssid, password);
   // Display receiver's IP
   IPAddress IP = WiFi.softAPIP();
-  Serial.print("Server IP address: ");
-  Serial.println(IP);
+  //Serial.print("Server IP address: ");
+  //Serial.println(IP);
   // Start listening for UDP packets
   udp.begin(port);
-  Serial.println("UDP server started");
+  //Serial.println("UDP server started");
 }
 
 std::array<uint8_t, 32> wifiReceive() {
