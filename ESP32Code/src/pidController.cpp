@@ -27,7 +27,7 @@ float pRateYaw = 2;
 float iRateYaw = 12;
 float dRateYaw = 0;
 
-float pangle = 2;
+float pangle = 1;
 float iangle = 0;
 float dangle = 0;
 
