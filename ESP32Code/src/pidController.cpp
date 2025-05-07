@@ -20,12 +20,12 @@ unsigned long timePreviousPid = 0;
 // PID controller values
 // change these values to tune the PID controller based on the system
 
-float pRate = 3; // proportional gain
-float iRate = 1.5; // integral gain
-float dRate =  0.002; // derivative gain
+float pRate = 2.75; // proportional gain
+float iRate = .2; // integral gain
+float dRate =  0.1; // derivative gain
 
-float pRateYaw = 2;
-float iRateYaw = 12;
+float pRateYaw = 0;
+float iRateYaw = 0;
 float dRateYaw = 0;
 
 float pangle = 1;
@@ -159,11 +159,13 @@ void pidControl(
     float yawPID = pidEquation(pRateYaw, iRateYaw, dRateYaw, yawRateError, &prevYawError, &prevYawI, timeDifference);
     //float yawPID = 0;
 
-    Serial.print("RollPID" + (String)rollPID);
-    Serial.print(" PitchPID: " + (String)pitchPID);
+    /*Serial.print("RollPID");
+    Serial.print(rollPID, 4);
+    Serial.print(" PitchPID: ");
+    Serial.print(pitchPID, 4);
     Serial.print(" yawPId: " + (String)yawPID);
     Serial.print(" Throttle: " + (String)throttleInput);
-    Serial.println();
+    Serial.println();*/
 
     //float throttlePID = pidEquation(p, i, d, verticalVelocityError, prevVerticalVelocityError, prevVerticalVelocityI, timeDifference);
     float throttlePID = 0;
@@ -176,6 +178,9 @@ void pidControl(
     dutyCycles[2] = calculateDutyCycleFL(baseThrottle, rollPID, pitchPID, yawPID);
     dutyCycles[3] = calculateDutyCycleBL(baseThrottle, rollPID, pitchPID, yawPID);
 
+    Serial.print(dutyCycles[3]);
+    Serial.println();
+    
     //find scaling factor
     //float scaleFactor = pidScale(dutyCycles[0],dutyCycles[1],dutyCycles[2],dutyCycles[3]);
     float scaleFactor = 1;

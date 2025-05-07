@@ -34,10 +34,10 @@ def flip_axis(value):
     return -value
 
 def addDeadzone(value):
-    if(value>.1):
-        return (value-.1)*(10/9)
-    if(value<-.1):
-        return (value+.1)*(10/9)
+    if(value>.2):
+        return (value-.2)*(10/8)
+    if(value<-.2):
+        return (value+.2)*(10/8)
     return 0
 
 # Function to send UDP packets
