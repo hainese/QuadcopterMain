@@ -54,7 +54,7 @@ def send_data(payload, header):
     # Send the packet over UDP
     sock.sendto(packet, (ESP_IP, PORT))
 
-# Main loop
+# MAIN LOOP ----- MAIN LOOP ----- MAIN LOOP ----- MAIN LOOP ----- MAIN LOOP ----- MAIN LOOP ----- MAIN LOOP
 try:
     heartbeat = True
     heartbeatTime = time.time()
@@ -65,10 +65,10 @@ try:
         print(time.time() - sendTime)
         sendTime = time.time()
         
-        # Read joystick axes
+        # READ JOYSTICK AXIS
         left_x = joystick.get_axis(0)  # Left Stick X
         left_x = addDeadzone(left_x)
-
+        
         left_y = joystick.get_axis(1)  # Left Stick Y
         left_y = flip_axis(left_y)
         left_y = addDeadzone(left_y)
