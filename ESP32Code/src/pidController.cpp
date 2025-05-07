@@ -13,15 +13,9 @@ unsigned long timePreviousPid = 0;
 
 // PID controller values
 // change these values to tune the PID controller based on the system
-<<<<<<< HEAD
-float p = 0.3; // proportional gain
-float i = 0.01; // integral gain
-float d = 0.0; // derivative gain
-=======
 float p = 3; // proportional gain
 float i = 0.5; // integral gain
 float d = 0.2; // derivative gain
->>>>>>> 8997d327259e86fdf3a79a98ffe448fe61c4ae1c
 
 float pangle = 1;
 float iangle = 0;
