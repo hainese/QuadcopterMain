@@ -20,11 +20,11 @@ void sensorSetup(){
 
   while(!temp){
     if (!sox.begin_I2C(0x6A)) {
-      Serial.println("Failed to find LSM6DSOX chip at address 0x6A");
+      //Serial.println("Failed to find LSM6DSOX chip at address 0x6A");
     }
     else{
       temp =1;
-      Serial.println("Gyro Good");
+      //Serial.println("Gyro Good");
     }
     delay(100);
   }

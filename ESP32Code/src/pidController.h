@@ -11,11 +11,7 @@ float calculateDutyCycleBR(float throttle, float roll, float pitch, float yaw);
 float calculateDutyCycleFR(float throttle, float roll, float pitch, float yaw);
 float calculateDutyCycleFL(float throttle, float roll, float pitch, float yaw);
 float calculateDutyCycleBL(float throttle, float roll, float pitch, float yaw);
-void pidControl(float *prevRollError, float *prevRollI,
-                float *prevPitchError, float *prevPitchI,
-                float *prevYawError, float *prevYawI,
-                float *prevVerticalVelocityError, float *prevVerticalVelocityI,
-                float rollInput, 
+void pidControl(float rollInput, 
                 float pitchInput, 
                 float yawInput, 
                 float throttleInput, 
@@ -25,7 +21,8 @@ void pidControl(float *prevRollError, float *prevRollI,
                 float rollAngle,
                 float pitchAngle,
                 float currentVerticalVelocity,
-                float *dutyCycles
+                float *dutyCycles,
+                bool enable
             );
 
 #endif

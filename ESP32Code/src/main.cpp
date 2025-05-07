@@ -8,12 +8,6 @@
 
 //#include <ctime>
 
-// pid init variables
-float prevRollError = 0, prevRollI = 0;
-float prevPitchError = 0, prevPitchI = 0;
-float prevYawError = 0, prevYawI = 0;
-float prevVerticalVelocityError = 0, prevVerticalVelocityI = 0;
-
 // Example sensor rates (replace with real gyro data)
 float rollRate = 0.0, pitchRate = 0.0, yawRate = 0.0;
 float rollAngle = 0.0, pitchAngle = 0.0;
@@ -53,7 +47,7 @@ void checkButtonEnable(){
   }
   if(buttonA){
     if(millis()-buttonAEnableTime > 3500){
-      Serial.println("Enabling Outputs");
+      //Serial.println("Enabling Outputs");
       buttonEnable = 1;
     }
   }
@@ -65,7 +59,7 @@ void checkButtonDisable(){
     buttonBEnableTime = millis();
   }
   if(buttonB){
-    if(millis()-buttonBEnableTime > 1000){
+    if(millis()-buttonBEnableTime > 100){
       //Serial.println("Disabling Outputs");
       buttonEnable = 0;
     }
@@ -132,10 +126,6 @@ void loop() {
 
   // calculate duty cycles
   pidControl(
-    &prevRollError, &prevRollI,
-    &prevPitchError, &prevPitchI,
-    &prevYawError, &prevYawI,
-    &prevVerticalVelocityError, &prevVerticalVelocityI,
     userRoll, 
     userPitch, 
     userYaw, 
@@ -146,7 +136,8 @@ void loop() {
     rollAngle,
     pitchAngle,
     verticalVel,
-    dutyCycles
+    dutyCycles,
+    outputEnable
   );
 
   dutyCycle8bit[0] = (uint8_t)dutyCycles[0];
