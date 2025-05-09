@@ -22,7 +22,13 @@ void pidControl(float rollInput,
                 float pitchAngle,
                 float currentVerticalVelocity,
                 float *dutyCycles,
-                bool enable
+                bool enable,
+                bool pInc,
+                bool pDec,
+                bool iInc,
+                bool iDec,
+                bool dInc,
+                bool dDec 
             );
 
 #endif

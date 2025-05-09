@@ -23,6 +23,7 @@ float maxGyro = 0;
 
 std::array<uint8_t, 32> packet;
 bool buttonA, buttonB, prevButtonA, prevButtonB;
+bool buttonX, buttonY, buttonRB, buttonLB, buttonBack, buttonStart;
 bool globalHeartbeat, expectedHeartbeat;
 bool heartbeatEnable, buttonEnable, outputEnable;
 float userThrottle = 0, userYaw = 0, userPitch = 0, userRoll = 0;
@@ -91,8 +92,26 @@ void loop() {
     memcpy(&userRoll, &packetCombiner, sizeof(packetCombiner));
     packetCombiner = ((packet[13]<<24) | (packet[14]<<16) | (packet[15]<<8) | packet [16]);
     memcpy(&userPitch, &packetCombiner, sizeof(packetCombiner));
+
+    buttonX = (packet[20] >> (0)) & 1;
+    buttonY = (packet[20] >> (1)) & 1;
+    buttonLB = (packet[20] >> (2)) & 1;
+    buttonRB = (packet[20] >> (3)) & 1;
+    buttonBack = (packet[20] >> (4)) & 1;
+    buttonStart = (packet[20] >> (5)) & 1;
+    Serial.print(",  ");
+    Serial.print(buttonX);
+    Serial.print(buttonY);
+    Serial.print(buttonLB);
+    Serial.print(buttonRB);
+    Serial.print(buttonBack);
+    Serial.print(buttonStart);
+    Serial.print(",  ");
+
+
   }
 
+  
   /*Serial.print("User Roll: " + (String)userRoll);
   Serial.print(" User Pitch: " + (String)userPitch);
   Serial.print(" User Yaw: " + (String)userYaw);
@@ -123,7 +142,7 @@ void loop() {
   verticalVel = velData[0];
   
 
-
+  
   // calculate duty cycles
   pidControl(
     userRoll, 
@@ -137,7 +156,13 @@ void loop() {
     pitchAngle,
     verticalVel,
     dutyCycles,
-    outputEnable
+    outputEnable,
+    buttonX,
+    buttonY,
+    buttonLB,
+    buttonRB,
+    buttonBack,
+    buttonStart
   );
 
   dutyCycle8bit[0] = (uint8_t)dutyCycles[0];

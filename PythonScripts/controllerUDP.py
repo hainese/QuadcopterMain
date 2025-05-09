@@ -113,10 +113,24 @@ try:
         if heartbeat:
             header |= 0b00000100
 
+        otherButtons = 0b00000000
+        if button_X:
+            otherButtons |= 0b00000001
+        if button_Y:
+            otherButtons |= 0b00000010
+        if button_LB:
+            otherButtons |= 0b00000100
+        if button_RB:
+            otherButtons |= 0b00001000
+        if button_Back:
+            otherButtons |= 0b00010000
+        if button_Start:
+            otherButtons |= 0b00100000
+
 
 
         # Create payload with joystick values at first 16 bytes
-        payload = struct.pack('>ffff',left_x, left_y, right_x, right_y)
+        payload = struct.pack('>ffffi',left_x, left_y, right_x, right_y, otherButtons)
 
         # Send the packet over UDP
         send_data(payload, header)

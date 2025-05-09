@@ -20,17 +20,19 @@ unsigned long timePreviousPid = 0;
 // PID controller values
 // change these values to tune the PID controller based on the system
 
-float pRate = 2.75; // proportional gain
-float iRate = .2; // integral gain
-float dRate =  0.1; // derivative gain
+float pRate = 2; // proportional gain
+float iRate = .03; // integral gain
+float dRate =  .11; // derivative gain
 
 float pRateYaw = 0;
 float iRateYaw = 0;
 float dRateYaw = 0;
 
-float pangle = 1;
+float pangle = 2;
 float iangle = 0;
 float dangle = 0;
+
+unsigned long pidLastTime = 0;
 
 // calculate desired rates for roll, pitch, and yaw
 // may need to change
@@ -44,7 +46,7 @@ float desiredRate(float inputValue){
 // calculate desired angles for roll, pitch, and yaw from -90 to 90 degrees
 float desiredAngle(float inputValue){
     //float output = ((inputValue - 127.5) / 127.5) * 90; // -1 and 1 to -90 and 90
-    float output = (inputValue * 10);
+    float output = (inputValue * 20);
     return output;
 }
 
@@ -126,12 +128,52 @@ void pidControl(
     float pitchAngle, // angle input for pitch
     float currentVerticalVelocity, // vertical velocity input
     float *dutyCycles, // array to hold duty cycles for each motor
-    bool enable
+    bool enable,
+    bool pInc,
+    bool pDec,
+    bool iInc,
+    bool iDec,
+    bool dInc,
+    bool dDec 
 ) {
 
+    
     unsigned long timeCurrent = millis();
     float timeDifference = (timeCurrent - timePreviousPid) / 1000.0;
     timePreviousPid = timeCurrent;
+   
+    Serial.println();
+    Serial.print(pRate);
+    Serial.print(", ");
+    Serial.print(iRate);
+    Serial.print(", ");
+    Serial.print(dRate);
+    Serial.print(", ");
+    Serial.print(pInc);
+    
+    unsigned long pidTimeDiff = (timeCurrent - pidLastTime);
+    if(pidTimeDiff > 50){
+        if(pInc){
+            pRate += .01;
+        }
+        else if(pDec){
+            pRate -= .01;
+        }
+        if(iInc){
+            iRate += .01;
+        }
+        else if(iDec){
+            iRate -= .01;
+        }
+        if(dInc){
+            dRate += .01;
+        }
+        else if(dDec){
+            dRate -= .01;
+        }
+        pidLastTime = timeCurrent;
+    }
+
 
     // calculate the desired angles for roll and pitch
     float desiredRollAngle = desiredAngle(rollInput);
@@ -178,8 +220,7 @@ void pidControl(
     dutyCycles[2] = calculateDutyCycleFL(baseThrottle, rollPID, pitchPID, yawPID);
     dutyCycles[3] = calculateDutyCycleBL(baseThrottle, rollPID, pitchPID, yawPID);
 
-    Serial.print(dutyCycles[3]);
-    Serial.println();
+
     
     //find scaling factor
     //float scaleFactor = pidScale(dutyCycles[0],dutyCycles[1],dutyCycles[2],dutyCycles[3]);
